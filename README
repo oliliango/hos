@@ -1,0 +1,32 @@
+(c) 2012 Sergey Shcherbakov <shchers@gmail.com>
+
+Project name: hos
+Purposes: Tool for creating HTTP proxy which will go through SOCKS proxy over SSH Tunnel
+External libs/modules required: libssh, polipo
+
+* How it works?
+Some time you need to access to your email box (for example) from public network.
+But it's not secure. To avoid "fishers" you can use your server as proxy, but sharing
+proxy server ports to internet not secured too. So for access to your proxy server can
+be used SSH protocal.
+SSH can act as a SOCKS4/4a/5 server. But for normal work of many application it will
+not be enougth SOCKS connection should be converted HTTP. For this purposes can be used
+polipo.
+
+Example of usage SSH client and polipo for WEB tunnel.
+  * Connect to SSH server with enabled SOCKS on port 9999
+ssh user@server.name -D9999
+  * Create config for polipo
+proxyAddress = "127.0.0.1"
+proxyPort = 8888
+allowedClients = "0.0.0.0/0"
+cacheIsShared = false
+socksParentProxy = "localhost:9999"
+socksProxyType = socks4a
+localDocumentRoot = ""
+disableVia=false
+censoredHeaders = from, accept-language
+censorReferer = maybe
+  * Run polipo
+sudo polipo -c $HOME/polipo.conf
+
